@@ -1,0 +1,33 @@
+# This workflow validates, deploys, and runs the specified bundle
+# within a production target named "prod".
+name: Production deployment
+
+# Ensure that only a single workflow runs at a time.
+concurrency: 1
+
+# Trigger this workflow when changes are pushed to the main branch.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bakehosue_analytics/**'
+
+jobs:
+  deploy:
+    name: Deploy bundle
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository.
+      - uses: actions/checkout@v4
+
+      # Download and configure the Databricks CLI.
+      - uses: databricks/setup-cli@main
+
+      # Deploy the bundle to the "prod" target.
+      - name: Deploy Databricks bundle
+        run: databricks bundle deploy -t prod
+        working-directory: bakehosue_analytics
+        env:
+          DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
