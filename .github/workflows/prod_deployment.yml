@@ -2,19 +2,16 @@
 # within a production target named "prod".
 name: 'Production deployment'
 
-# Ensure that only a single job or workflow using the same concurrency group
-# runs at a time.
+# Ensure that only a single job or workflow runs at a time.
 concurrency: 1
 
-# Trigger this workflow whenever a pull request is pushed to the repo's
-# main branch.
+# Trigger this workflow whenever changes are pushed to the main branch.
 on:
-
   push:
     branches:
       - main
     paths:
-      - 'bakehosue_analytics/ ** '
+      - 'bakehosue_analytics/**'
 
 jobs:
   deploy:
@@ -22,21 +19,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out this repo, so that this workflow can access it.
+      # Check out this repo.
       - uses: actions/checkout@v3
 
       # Download the Databricks CLI.
-      # See https://github.com/databricks/setup-cli
       - uses: databricks/setup-cli@main
 
-      # Deploy the bundle to the "prod" target as defined
-      # in the bundle's settings file.
+      # Deploy the bundle to the "prod" target.
       - run: databricks bundle deploy
         working-directory: bakehosue_analytics
         env:
           DATABRICKS_TOKEN: ${{ secrets.SP_TOKEN }}
           DATABRICKS_BUNDLE_ENV: prod
-      - uses: databricks/setup-cli@main
-
-      # Deploy the bundle to the "prod" target as defined
-      # in the bundle's settings file.
