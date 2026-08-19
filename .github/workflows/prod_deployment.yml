@@ -24,7 +24,7 @@ jobs:
 
       # Download the Databricks CLI.
       - uses: databricks/setup-cli@main
-
+      
       # Deploy the bundle to the "prod" target.
       - run: databricks bundle deploy
         working-directory: bakehosue_analytics
